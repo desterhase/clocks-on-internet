@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>clocks on the internet</title>
+    <style>
+      body {
+        font-family: "Courier New", Courier, monospace;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        background-color: bisque;
+      }
+
+      .clocks {
+        background-color: paleturquoise;
+        display: flex;
+        align-self: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Clocks on the internet</h1>
+    </header>
+    <section class="clocks">
+      <main id="container"></main>
+    </section>
+
+    <script>
+      // TODO(DON): user changes the date, which is saved elsewhere.
+      // TODO(DON): user adds new timer.
+      // TODO(DON): timer layout stay the same while timers are loading.
+
+      var clocks = [
+        {
+          name: "Time elapsed since event one",
+          eventDate: new Date(2022, 7, 12, 8, 0, 32),
+        },
+        // sunday, april 16th, 2023
+        {
+          name: "Time elapsed since event two",
+          eventDate: new Date(2023, 3, 16, 18, 40, 50),
+        },
+        // friday, february 17th, 2023
+        {
+          name: "Time elapsed since event three",
+          eventDate: new Date(2023, 1, 17, 22, 30, 04),
+        },
+        {
+          name: "Time elapsed since event four",
+          eventDate: new Date(2023, 1, 20, 23, 45, 26),
+        },
+      ];
+
+      setInterval(updateClocks, 1000);
+
+      var container = document.getElementById("container");
+      clocks.forEach(function (clock) {
+        var timeElement = document.createElement("time");
+        timeElement.id = clock.name;
+        container.appendChild(timeElement);
+      });
+
+      function updateClocks() {
+        clocks.forEach(function (clock) {
+          var timeElement = document.getElementById(clock.name);
+          timeElement.innerHTML = `<p><b>${clock.name}</b >: ${computeClockData(
+            clock.name,
+            clock.eventDate
+          )}</p > `;
+        });
+      }
+      var dayInMs = 86400000;
+      var hourInMs = 3600000;
+      var minuteInMs = 60000;
+      var secondInMs = 1000;
+
+      function computeClockData(name, eventDate) {
+        var totalMilliseconds = Date.now() - eventDate;
+
+        var displayDays = Math.floor(totalMilliseconds / dayInMs);
+        var displayHours = Math.floor(
+          (totalMilliseconds - displayDays * dayInMs) / hourInMs
+        );
+        var displayMinutes = Math.floor(
+          (totalMilliseconds -
+            (displayDays * dayInMs + displayHours * hourInMs)) /
+            minuteInMs
+        );
+        var displaySeconds = Math.floor(
+          (totalMilliseconds -
+            (displayDays * dayInMs +
+              displayHours * hourInMs +
+              displayMinutes * minuteInMs)) /
+            secondInMs
+        );
+
+        return `${displayDays} days, ${displayHours} hours, ${displayMinutes} minutes, ${displaySeconds} seconds`;
+      }
+    </script>
+  </body>
+  <html></html>
+</html>
